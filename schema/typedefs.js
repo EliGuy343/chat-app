@@ -1,6 +1,6 @@
 import { gql } from "apollo-server";
 
-const typedefs = gql`
+const typeDefs = gql`
     input UserInput {
         name:String!,
         email:String!,
@@ -15,8 +15,9 @@ const typedefs = gql`
         users:[User]
         user(id:ID!):User
     }
-    type Mutation {   
+    type Mutation {
+        signupUser(newUser:UserInput!):User
     }
 `;
 
-export default typedefs;
+export default typeDefs;
