@@ -1,11 +1,28 @@
 import pc from '@prisma/client';
-import {ApolloError, AuthenticationError} from 'apollo-server';
+import {
+    ApolloError,
+    AuthenticationError, 
+    ForbiddenError
+} from 'apollo-server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const prisma = new pc.PrismaClient();
 const resolvers = {
     Query:{
+        users: async (_,args,{userId})=>{
+            if(!userId)
+                ForbiddenError('You must be logged in to fetch users');
+                
+            const users = await prisma.user.findMany({
+                where:{
+                    id:{
+                        not:userId
+                    }
+                }
+            });
+            return users;
+        }
     },
     Mutation:{
         signupUser: async (_,{newUser})=> {
@@ -33,7 +50,7 @@ const resolvers = {
                 userSignin.password, user.password);
             if(!passwordMatch)
                 throw new AuthenticationError('Password is invalid');
-            const token = jwt.sign({userId:user.id},process.env.JWT_TOKEN);
+            const token = jwt.sign({userId:user.id},process.env.JWT);
             return {token};
         }
     }
