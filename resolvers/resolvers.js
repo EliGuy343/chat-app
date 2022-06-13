@@ -50,8 +50,21 @@ const resolvers = {
                 userSignin.password, user.password);
             if(!passwordMatch)
                 throw new AuthenticationError('Password is invalid');
+
             const token = jwt.sign({userId:user.id},process.env.JWT);
             return {token};
+        },
+        createMessage: async (_,{receiverId, text},{userId})=>{
+            if(!userId)
+                throw new ForbiddenError('You are not logged in');
+            const message = await prisma.message.create({
+                data:{
+                    text:text,
+                    receiverId: receiverId,
+                    senderId:userId
+                }
+            });
+            return message;
         }
     }
 };

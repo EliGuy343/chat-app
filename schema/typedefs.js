@@ -18,12 +18,21 @@ const typeDefs = gql`
         name:String
         email:String
     }
-    type Query {
+    scalar Date
+    type Message {
+        id:ID!
+        text: String!
+        receiverId:Int!
+        senderId:Int!
+        createdAt:Date!
+    }
+    type Query{
         users:[User]
     }
-    type Mutation {
+    type Mutation{
         signupUser(newUser:UserInput!):User
         signinUser(userSignin:UserSigninInput):Token
+        createMessage(receiverId:Int!,text:String!):Message
     }
 `;
 
