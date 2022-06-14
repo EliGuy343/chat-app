@@ -4,12 +4,16 @@ import {
     Stack,
     Typography,
     Button,
-    TextField
+    TextField,
+    Card
 } from '@mui/material';
+import { useRef } from 'react';
 
 
 const AuthScreen = () => {
     const [formData, setFormData] = useState({});
+    const [showLogin, setShowLogin] = useState(true);
+    const form = useRef(null)
     const handleChange = (e) =>{
         setFormData({
             ...formData,
@@ -24,51 +28,80 @@ const AuthScreen = () => {
 
     return (
         <Box
+            ref={form}
             component='form'
             onSubmit={handleSubmit}
             display='flex'
             justifyContent='center'
             alignItems='center'
+            textAlign='center'
             height='80vh'
         >
-            <Stack
-                spacing={2}
-                sx={{'width':'400px'}}
+            <Card
+                variant='outlined'
+                sx={{'padding':'10px'}}
             >
-                <Typography variant="h5">
-                    Please Signup
-                </Typography>
-                <TextField
-                    name='name'
-                    label='Name'
-                    variant='standard'
-                    onChange={handleChange}
-                />
-                <TextField
-                    type='email'
-                    name='email'
-                    label='Email'
-                    variant='standard'
-                    onChange={handleChange}
-                />
-                <TextField
-                    type='password'
-                    name='password'
-                    label='Password'
-                    variant='standard'
-                    onChange={handleChange}
-                />
-                <TextField
-                    type='password'
-                    name='confrimPassword'
-                    label='Confirm Password'
-                    variant='standard'
-                    onChange={handleChange}
-                />
-                <Button varaiant="outlined" type="submit">
-                    Submit
-                </Button>
-            </Stack>
+                <Stack
+                    spacing={2}
+                    sx={{'width':'400px'}}
+                    >
+                    <Typography variant="h5">
+                        {showLogin? 'Login' : 'Sign Up'}
+                    </Typography>
+                    {
+                        !showLogin && <>
+                            <TextField
+                                name='name'
+                                label='Name'
+                                variant='standard'
+                                onChange={handleChange}
+                            />
+                    </>
+                    }
+                    <TextField
+                        type='email'
+                        name='email'
+                        label='Email'
+                        variant='standard'
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        type='password'
+                        name='password'
+                        label='Password'
+                        variant='standard'
+                        onChange={handleChange}
+                    />
+                    {
+                        !showLogin && <>
+                            <TextField
+                                type='password'
+                                name='confrimPassword'
+                                label='Confirm Password'
+                                variant='standard'
+                                onChange={handleChange}
+                            />
+                        </>
+                    }
+                    <Button variant='contained' type="submit">
+                        {showLogin ? 'Login' : 'Register'}
+                    </Button>
+                    <Button 
+                        textAlign='center'
+                        alignItems='center'
+                        color='secondary'
+                        variant='outlined'
+                        size='small'
+                        onClick={()=>{
+                            setShowLogin(!showLogin);
+                            setFormData({});
+                            form.current.reset();
+                        }}
+                    >
+                        {showLogin? 'Sign Up': 'Login'}
+                    </Button>
+                </Stack>
+            </Card>
         </Box>
     );
 }
