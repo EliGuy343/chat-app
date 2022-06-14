@@ -28,6 +28,7 @@ const typeDefs = gql`
     }
     type Query{
         users:[User]
+        messagesByUser(receiverId:Int!):[Message]
     }
     type Mutation{
         signupUser(newUser:UserInput!):User
