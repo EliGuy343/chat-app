@@ -1,9 +1,10 @@
 import './App.css';
+import AuthScreen from './pages/AuthScreen';
 
 function App() {
   return (
     <div className="App">
-      <h1>test</h1>
+      <AuthScreen/>
     </div>
   );
 }
