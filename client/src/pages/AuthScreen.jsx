@@ -18,7 +18,7 @@ const AuthScreen = () => {
         setFormData({
             ...formData,
             [e.target.name]:e.target.value
-        })
+        });
     };
 
     const handleSubmit = (e) =>{
@@ -87,8 +87,6 @@ const AuthScreen = () => {
                         {showLogin ? 'Login' : 'Register'}
                     </Button>
                     <Button 
-                        textAlign='center'
-                        alignItems='center'
                         color='secondary'
                         variant='outlined'
                         size='small'
@@ -106,4 +104,4 @@ const AuthScreen = () => {
     );
 }
 
-export default AuthScreen
+export default AuthScreen;

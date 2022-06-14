@@ -2,6 +2,7 @@ import './App.css';
 import AuthScreen from './pages/AuthScreen';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material/styles';
+import HomeScreen from './pages/HomeScreen';
 
 
 
@@ -22,7 +23,7 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={themeOptions}>
-        <AuthScreen/>
+        <HomeScreen/>
       </ThemeProvider>
     </div>
   );
