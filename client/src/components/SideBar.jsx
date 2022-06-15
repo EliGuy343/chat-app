@@ -10,7 +10,6 @@ const SideBar = () => {
     return (
         <Box
             backgroundColor='#f7f7f7'
-            height='100vh'
             maxWidth='350px'
             padding='10px'
         >

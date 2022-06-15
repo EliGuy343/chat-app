@@ -12,7 +12,7 @@ const UserCard = ({user:{name,id}}) => {
             spacing={2}
             sx={{'py':'1px'}}
             alignItems='center'
-            onClick={()=>navigate(`/${id}`)}
+            onClick={()=>navigate(`/${id}/${name}`)}
         >
             <Avatar
                 src={`http://avatars.dicebear.com/api/initials/${name}.svg`}
