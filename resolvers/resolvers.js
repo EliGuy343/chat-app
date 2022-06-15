@@ -44,6 +44,17 @@ const resolvers = {
                 }
             });
             return messages;
+        },
+        user: async (_,{receiverId},{userId})=>{
+            if(!userId)
+                ForbiddenError('You must be logged in to fetch users');
+                
+            const user = await prisma.user.findFirst({
+                where:{
+                    id:receiverId
+                }
+            });
+            return user;
         }
     },
     Mutation:{

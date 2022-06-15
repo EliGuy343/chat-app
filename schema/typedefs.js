@@ -27,6 +27,7 @@ const typeDefs = gql`
         createdAt:Date!
     }
     type Query{
+        user(receiverId:Int!):User
         users:[User]
         messagesByUser(receiverId:Int!):[Message]
     }
