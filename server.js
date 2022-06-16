@@ -6,7 +6,9 @@ import jwt from 'jsonwebtoken';
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    introspection:true,
+    cors:{
+        allow_any_origin: true
+    },
     context:({req})=>{
         const authorization = req.headers.authorization;
         if(authorization){

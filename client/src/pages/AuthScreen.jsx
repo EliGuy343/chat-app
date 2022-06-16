@@ -5,27 +5,58 @@ import {
     Typography,
     Button,
     TextField,
-    Card
+    Card,
+    CircularProgress,
+    Alert
 } from '@mui/material';
 import { useRef } from 'react';
+import { useMutation } from '@apollo/client';
+import { SIGNUP_USER } from '../graphql/mutations';
 
 
 const AuthScreen = () => {
     const [formData, setFormData] = useState({});
     const [showLogin, setShowLogin] = useState(true);
     const form = useRef(null)
+    const [
+        signupUser,
+        {data:signupData,loading:LoadingSignup,error:signupError}
+    ] = useMutation(SIGNUP_USER);
+
     const handleChange = (e) =>{
         setFormData({
             ...formData,
             [e.target.name]:e.target.value
         });
     };
-
+    
     const handleSubmit = (e) =>{
+        debugger;
         e.preventDefault();
-        console.log(formData);
+        if(showLogin) {
+            //sign in user
+        } 
+        else {
+            signupUser({
+                variables:{
+                    newUser:{
+                        name:formData.name,
+                        email:formData.email,
+                        password:formData.password
+                    }
+                }
+            })
+        }
     };
-
+    if(LoadingSignup) {
+        return (
+            <Box>
+                <CircularProgress/>
+                <Typography variant='h6'>Authenticating...</Typography>
+            </Box>
+        )
+    }
+    console.log(signupError);
     return (
         <Box
             ref={form}
@@ -45,8 +76,16 @@ const AuthScreen = () => {
                     spacing={2}
                     sx={{'width':'400px'}}
                     >
+                    {signupData && 
+                    <Alert severity='success'>
+                        Sign Up Complete
+                    </Alert>}
+                    {signupError &&
+                    <Alert severity='error'>
+                        {signupError.message}
+                    </Alert>}
                     <Typography variant="h5">
-                        {showLogin? 'Login' : 'Sign Up'}
+                    {showLogin? 'Login' : 'Sign Up'}
                     </Typography>
                     {
                         !showLogin && <>

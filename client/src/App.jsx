@@ -23,7 +23,7 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={themeOptions}>
-        <HomeScreen/>
+        <AuthScreen/>
       </ThemeProvider>
     </div>
   );
