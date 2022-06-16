@@ -16,6 +16,7 @@ import { SIGNUP_USER } from '../graphql/mutations';
 
 const AuthScreen = () => {
     const [formData, setFormData] = useState({});
+    const [authError, setAuthError] = useState(null);
     const [showLogin, setShowLogin] = useState(true);
     const form = useRef(null)
     const [
@@ -37,6 +38,21 @@ const AuthScreen = () => {
             //sign in user
         } 
         else {
+            if(formData.password !== formData.confrimPassword)
+                return setAuthError('Error: Passwords do not much!');
+            if(formData.password.length < 8){
+                return setAuthError(
+                    'Password should be at least 8 characters');
+            }
+            if(!/\d/.test(formData.password)){
+                return setAuthError(
+                    'Password should contain at least 1 number');
+            }
+            if(!/[a-zA-Z]/g.test(formData.password)){
+                return setAuthError(
+                    'Password should contain at least 1 letter');
+            }
+            setAuthError(null);
             signupUser({
                 variables:{
                     newUser:{
@@ -83,6 +99,10 @@ const AuthScreen = () => {
                     {signupError &&
                     <Alert severity='error'>
                         {signupError.message}
+                    </Alert>}
+                    {authError &&
+                    <Alert severity='error'>
+                        {authError}
                     </Alert>}
                     <Typography variant="h5">
                     {showLogin? 'Login' : 'Sign Up'}
