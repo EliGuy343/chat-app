@@ -8,3 +8,11 @@ export const SIGNUP_USER = gql`
         email
     }
 }`;
+
+export const LOGIN_USER = gql`
+    mutation Mutation($userSignin: UserSigninInput) {
+        signinUser(userSignin: $userSignin) {
+            token
+        }
+}
+`

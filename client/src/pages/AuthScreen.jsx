@@ -11,18 +11,30 @@ import {
 } from '@mui/material';
 import { useRef } from 'react';
 import { useMutation } from '@apollo/client';
-import { SIGNUP_USER } from '../graphql/mutations';
+import { LOGIN_USER, SIGNUP_USER } from '../graphql/mutations';
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 
 
 const AuthScreen = () => {
     const [formData, setFormData] = useState({});
     const [authError, setAuthError] = useState(null);
     const [showLogin, setShowLogin] = useState(true);
+    const {login} = useContext(UserContext);
     const form = useRef(null)
     const [
         signupUser,
-        {data:signupData,loading:LoadingSignup,error:signupError}
+        {data:signupData,loading:loadingSignup,error:signupError}
     ] = useMutation(SIGNUP_USER);
+    const [
+        loginUser,
+        {data:loginData, loading:loadingLogin,error:loginError}
+    ] = useMutation(LOGIN_USER, {
+        onCompleted(data) {
+            localStorage.setItem('jwt',data.signinUser.token);
+            login(data.signinUser.token);
+        }
+    });
 
     const handleChange = (e) =>{
         setFormData({
@@ -32,23 +44,26 @@ const AuthScreen = () => {
     };
     
     const handleSubmit = (e) =>{
-        debugger;
         e.preventDefault();
         if(showLogin) {
-            //sign in user
+            loginUser({
+                variables:{
+                    userSignin:formData
+                }
+            });
         } 
         else {
             if(formData.password !== formData.confrimPassword)
                 return setAuthError('Error: Passwords do not much!');
-            if(formData.password.length < 8){
+            if(formData.password.length < 8) {
                 return setAuthError(
                     'Password should be at least 8 characters');
             }
-            if(!/\d/.test(formData.password)){
+            if(!/\d/.test(formData.password)) {
                 return setAuthError(
                     'Password should contain at least 1 number');
             }
-            if(!/[a-zA-Z]/g.test(formData.password)){
+            if(!/[a-zA-Z]/g.test(formData.password)) {
                 return setAuthError(
                     'Password should contain at least 1 letter');
             }
@@ -61,18 +76,18 @@ const AuthScreen = () => {
                         password:formData.password
                     }
                 }
-            })
+            });
         }
     };
-    if(LoadingSignup) {
+
+    if(loadingSignup && loadingLogin) {
         return (
             <Box>
                 <CircularProgress/>
                 <Typography variant='h6'>Authenticating...</Typography>
             </Box>
-        )
+        );
     }
-    console.log(signupError);
     return (
         <Box
             ref={form}
@@ -100,6 +115,10 @@ const AuthScreen = () => {
                     <Alert severity='error'>
                         {signupError.message}
                     </Alert>}
+                    {loginError &&
+                    <Alert severity='error'>
+                        {loginError.message}
+                    </Alert>}
                     {authError &&
                     <Alert severity='error'>
                         {authError}
@@ -114,6 +133,7 @@ const AuthScreen = () => {
                                 label='Name'
                                 variant='standard'
                                 onChange={handleChange}
+                                required
                             />
                     </>
                     }
@@ -123,6 +143,7 @@ const AuthScreen = () => {
                         label='Email'
                         variant='standard'
                         onChange={handleChange}
+                        required
                     />
                     <TextField
                         type='password'
@@ -130,6 +151,7 @@ const AuthScreen = () => {
                         label='Password'
                         variant='standard'
                         onChange={handleChange}
+                        required
                     />
                     {
                         !showLogin && <>
