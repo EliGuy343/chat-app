@@ -9,9 +9,16 @@ import {
   Typography
 } from '@mui/material';
 import MessageCard from './MessageCard';
+import { useQuery } from '@apollo/client';
+import { GET_MESSAGES } from '../graphql/queries';
 const ChatScreen = () => {
     const {id,name} = useParams();
-
+    const {data, loading , error} = useQuery(GET_MESSAGES,{
+      variables:{
+        receiverId:+id
+      }
+    });
+    console.log(data);
     return (
         <Box flexGrow={1}>
           <AppBar 

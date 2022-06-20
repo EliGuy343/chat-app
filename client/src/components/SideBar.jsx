@@ -11,8 +11,10 @@ import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_USERS } from '../graphql/queries';
+import { useApolloClient } from '@apollo/client';
 
 const SideBar = () => {
+    const client = useApolloClient();
     const {logout} = useContext(UserContext);
     const {loading, data, error} = useQuery(GET_ALL_USERS);
     console.log(data);
@@ -38,6 +40,7 @@ const SideBar = () => {
                     sx={{'marginTop':'3px', 'cursor':'pointer'}} 
                     onClick={()=> {
                         localStorage.removeItem('jwt');
+                        client.resetStore();
                         logout();
                     }}/>
             </Stack>
