@@ -22,7 +22,7 @@ const MessageCard = ({text,date,direction}) => {
             <Typography
                 variant='caption'
             >
-                {date}
+                {new Date(date).toLocaleTimeString()}
             </Typography>
         </Box>
     </Box>

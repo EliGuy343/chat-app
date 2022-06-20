@@ -4,6 +4,7 @@ import {
   AppBar,
   Avatar,
   Box,
+  CircularProgress,
   TextField,
   Toolbar,
   Typography
@@ -33,11 +34,25 @@ const ChatScreen = () => {
               <Typography variant='h6' color='black'>{name}</Typography>
             </Toolbar>
           </AppBar>
+          {loading ? (
+            <Box>
+              <CircularProgress/>
+              <Typography>
+                Loading messages...
+              </Typography>
+            </Box>
+          ) : (
           <Box backgroundColor='#e6e6e6' height='80vh' overflow='auto'>
-            <MessageCard text='test' date='25/7/2075' direction='start'/>
-            <MessageCard text='test' date='25/7/2075' direction='end'/>
-            <MessageCard text='test' date='25/7/2075' direction='start'/>
+            {data.messagesByUser.map(msg=>
+              <MessageCard
+                key={msg.createdAt} 
+                text={msg.text} 
+                date={msg.createdAt} 
+                direction={msg.receiverId == +id ? 'end' : 'start'}
+              />)
+            }
           </Box>
+          )}
           <TextField
             placeholder='Enter a Message'
             variant='outlined'
