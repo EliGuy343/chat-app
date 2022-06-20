@@ -17,7 +17,6 @@ const SideBar = () => {
     const client = useApolloClient();
     const {logout} = useContext(UserContext);
     const {loading, data, error} = useQuery(GET_ALL_USERS);
-    console.log(data);
     if(loading) {
         return (
             <Typography variant='h6'>

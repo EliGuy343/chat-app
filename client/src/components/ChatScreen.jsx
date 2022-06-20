@@ -11,30 +11,38 @@ import {
 } from '@mui/material';
 import MessageCard from './MessageCard';
 import { useQuery } from '@apollo/client';
-import { GET_MESSAGES } from '../graphql/queries';
+import { GET_MESSAGES, GET_USER } from '../graphql/queries';
 const ChatScreen = () => {
-    const {id,name} = useParams();
-    const {data, loading , error} = useQuery(GET_MESSAGES,{
-      variables:{
-        receiverId:+id
-      }
-    });
-    console.log(data);
+    const {id} = useParams();
+    const {data:userData, loading:userLoading, error:userError} = useQuery(
+      GET_USER,{ variables:{receiverId:+id}});  
+    const {data, loading , error} = useQuery(
+      GET_MESSAGES,{variables:{receiverId:+id}});
     return (
         <Box flexGrow={1}>
-          <AppBar 
+          {userLoading ? (
+            <Box>
+            <CircularProgress/>
+            <Typography>
+              Loading messages...
+            </Typography>
+          </Box>
+          ) : <AppBar 
             position='static' 
             sx={{'background':'#f5f5f5', 'color':'black', 'boxShadow':0}}
             >
             <Toolbar>
               <Avatar
-                src={`http://avatars.dicebear.com/api/initials/${name}.svg`}
+                src={`http://avatars.dicebear.com/api/initials/`
+                  +`${userData.user.name}.svg`}
                 sx={{'width':'32px','height':'32px','mr':'5px'}}
               />
-              <Typography variant='h6' color='black'>{name}</Typography>
+              <Typography variant='h6' color='black'>
+                {userData.user.name}
+              </Typography>
             </Toolbar>
-          </AppBar>
-          {loading ? (
+          </AppBar>}
+          {(loading || userLoading) ? (
             <Box>
               <CircularProgress/>
               <Typography>

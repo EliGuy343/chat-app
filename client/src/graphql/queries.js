@@ -20,3 +20,12 @@ export const GET_MESSAGES = gql`
         }
     }
 `
+export const GET_USER = gql`
+    query User($receiverId: Int!) {
+        user(receiverId: $receiverId) {
+            id
+            name
+            email
+        }
+    }
+`
