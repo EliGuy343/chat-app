@@ -36,6 +36,9 @@ const typeDefs = gql`
         signinUser(userSignin:UserSigninInput):Token
         createMessage(receiverId:Int!,text:String!):Message
     }
+    type Subscription{
+        messageAdded:Message
+    }
 `;
 
 export default typeDefs;

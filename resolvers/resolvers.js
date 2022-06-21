@@ -5,8 +5,12 @@ import {
 } from 'apollo-server-express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { PubSub } from 'graphql-subscriptions';
 
+const pubSub = new PubSub();
 const prisma = new pc.PrismaClient();
+const MESSAGE_ADDED = 'MESSAGE_ADDED';
+
 const resolvers = {
     Query:{
         users: async (_,args,{userId})=>{
@@ -96,7 +100,13 @@ const resolvers = {
                     senderId:userId
                 }
             });
+            pubSub.publish(MESSAGE_ADDED,{messageAdded:message})
             return message;
+        }
+    },
+    Subscription:{
+        messageAdded:{
+            subscribe:()=>pubSub.asyncIterator(MESSAGE_ADDED)
         }
     }
 };
