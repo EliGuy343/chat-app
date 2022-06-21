@@ -8,7 +8,7 @@ export const SIGNUP_USER = gql`
             email
         }
     }
-`
+`;
 
 export const LOGIN_USER = gql`
     mutation Mutation($userSignin: UserSigninInput) {
@@ -16,7 +16,7 @@ export const LOGIN_USER = gql`
             token
         }
     }
-`
+`;
 export const SEND_MESSAGE = gql`
     mutation CreateMessage($receiverId: Int!, $text: String!) {
         createMessage(receiverId: $receiverId, text: $text) {
@@ -27,4 +27,4 @@ export const SEND_MESSAGE = gql`
             createdAt
         }
     }
-`
+`;

@@ -8,7 +8,7 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  createHttpLink,
+  HttpLink,
   split,
 } from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
@@ -16,32 +16,35 @@ import {GraphQLWsLink} from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-const wsLink = new GraphQLWsLink(createClient({
-  url:'http://localhost:4000/graphql'
-}));
-const httpLink = createHttpLink({
-  uri:'http://localhost:4000/graphql'
-});
-const authLink = setContext((_, {headers}) => {
-  const token = localStorage.getItem('jwt');
+const authLink = setContext((_, { headers }) => {
   return {
-    headers:{ 
+    headers: {
       ...headers,
-      authorization: token || ""
+      authorization: localStorage.getItem('jwt')|| "" ,
     }
   }
 });
+
+const httpLink = new HttpLink({
+  uri:'http://localhost:4000/graphql'
+});
+
+const wsLink = new GraphQLWsLink(createClient({
+  url:'ws://localhost:4000/graphql',
+}));
+
 const splitLink = split(
-  ({query}) => {
-    const definiton = getMainDefinition(query);
+  ({ query }) => {
+    const definition = getMainDefinition(query);
     return (
-      definiton.kind === 'OperationDefiniton' &&
-      definiton.operation === 'subscription'
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
     );
   },
   wsLink,
-  authLink.concat(httpLink)
+  authLink.concat(httpLink),
 );
+
 
 const client = new ApolloClient({
   link: splitLink, 

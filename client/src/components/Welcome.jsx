@@ -11,7 +11,7 @@ const Welcome = () => {
    >
     <Typography variant='h2'>Welcome to Teams</Typography>
    </Stack>
-  )
+  );
 }
 
 export default Welcome

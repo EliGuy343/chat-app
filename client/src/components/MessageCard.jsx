@@ -26,7 +26,7 @@ const MessageCard = ({text,date,direction}) => {
             </Typography>
         </Box>
     </Box>
-  )
+  );
 }
 
 export default MessageCard

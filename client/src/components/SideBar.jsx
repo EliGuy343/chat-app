@@ -44,13 +44,13 @@ const SideBar = () => {
                     }}/>
             </Stack>
             <Divider/>
-            {
+            {data && data.users &&
                 data.users.map(user=>(
                     <UserCard key={user.id} user={user}/>
                 ))
             }
         </Box>
-    )
+    );
 }
 
 export default SideBar;

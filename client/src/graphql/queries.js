@@ -8,7 +8,7 @@ export const GET_ALL_USERS = gql`
             email
         }
     }
-`
+`;
 export const GET_MESSAGES = gql`
     query MessagesByUser($receiverId: Int!) {
         messagesByUser(receiverId: $receiverId) {
@@ -19,7 +19,7 @@ export const GET_MESSAGES = gql`
             createdAt
         }
     }
-`
+`;
 export const GET_USER = gql`
     query User($receiverId: Int!) {
         user(receiverId: $receiverId) {
@@ -28,4 +28,4 @@ export const GET_USER = gql`
             email
         }
     }
-`
+`;

@@ -12,47 +12,52 @@ import {
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import MessageCard from './MessageCard';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery, useSubscription } from '@apollo/client';
 import { GET_MESSAGES, GET_USER } from '../graphql/queries';
 import { useEffect } from 'react';
 import { SEND_MESSAGE } from '../graphql/mutations';
+import { MESSAGE_SUBSCRIPTION } from '../graphql/subscriptions';
 const ChatScreen = () => {
-    const {id} = useParams();
-    useEffect(() => {
+  const {id} = useParams();
+  const [messages, setMessages] = useState([]);
+  const [text, setText] = useState();
+  const {data:subData} = useSubscription(MESSAGE_SUBSCRIPTION,
+    {onSubscriptionData(data) {
+      console.log(data);
+      setMessages((prevMessages)=>[...prevMessages,
+        data.subscriptionData.data.messageAdded]);
+    }}
+  );
+  
+  useEffect(() => {
       if(data)
-        setMessages(data.messagesByUser);
-    },[id])
-    const [messages, setMessages] = useState([]);
-    const [text, setText] = useState();
+      setMessages(data.messagesByUser);
+    },[id]);
+    
     const {data:userData, loading:userLoading, error:userError} = useQuery(
       GET_USER,{ variables:{receiverId:+id}});
-    const {data, loading , error} = useQuery(
+      const {data, loading , error} = useQuery(
         GET_MESSAGES,{variables:{receiverId:+id}, onCompleted(data) {
           setMessages(data.messagesByUser);
-    }});
-    const [sendMessage] = useMutation(SEND_MESSAGE, {
-      onCompleted(data) {
-        console.log(messages);
-        setMessages([...messages,data.createMessage])
-      }
-    })
-    return (
-        <Box flexGrow={1}>
+        }});
+        const [sendMessage] = useMutation(SEND_MESSAGE);
+        return (
+      <Box flexGrow={1}>
           {userLoading ? (
             <Box>
-            <CircularProgress/>
+              <CircularProgress/>
             <Typography>
               Loading messages...
             </Typography>
           </Box>
           ) : <AppBar 
-            position='static' 
-            sx={{'background':'#f5f5f5', 'color':'black', 'boxShadow':0}}
-            >
+          position='static' 
+          sx={{'background':'#f5f5f5', 'color':'black', 'boxShadow':0}}
+          >
             <Toolbar>
               <Avatar
                 src={`http://avatars.dicebear.com/api/initials/`
-                  +`${userData.user.name}.svg`}
+                +`${userData.user.name}.svg`}
                 sx={{'width':'32px','height':'32px','mr':'5px'}}
               />
               <Typography variant='h6' color='black'>
@@ -112,7 +117,7 @@ const ChatScreen = () => {
             }}/>
           </Stack>
         </Box>
-  )
+  );
 }
 
 export default ChatScreen

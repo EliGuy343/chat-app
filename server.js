@@ -19,7 +19,7 @@ const apolloServer = new ApolloServer({schema, context:({req})=>{
     }
 }});
 await apolloServer.start()
-apolloServer.applyMiddleware({app});
+apolloServer.applyMiddleware({app, path:'/graphql'});
 const server = app.listen(PORT, () => {
     const wsServer = new WebSocketServer({
         server,
