@@ -1,9 +1,8 @@
 import pc from '@prisma/client';
 import {
-    ApolloError,
     AuthenticationError, 
     ForbiddenError
-} from 'apollo-server';
+} from 'apollo-server-express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 

@@ -1,23 +1,30 @@
-import { ApolloServer, gql} from "apollo-server";
-import resolvers from "./resolvers/resolvers.js";
-import typeDefs from "./schema/typedefs.js";
+import { ApolloServer } from 'apollo-server-express';
+import resolvers from './resolvers/resolvers.js';
+import typeDefs from './schema/typedefs.js';
 import jwt from 'jsonwebtoken';
+import { WebSocketServer } from 'ws';
+import { useServer } from 'graphql-ws/lib/use/ws';
+import express from 'express';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 
-const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    cors:{
-        allow_any_origin: true
-    },
-    context:({req})=>{
-        const authorization = req.headers.authorization;
-        if(authorization){
-            const {userId} = jwt.verify(authorization, process.env.JWT);
-            return {userId};
-        }
+
+const app = express();
+const schema = makeExecutableSchema({typeDefs, resolvers});
+const PORT = process.env.PORT || 4000
+const apolloServer = new ApolloServer({schema, context:({req})=>{
+    const authorization = req.headers.authorization;
+    if(authorization){
+        const {userId} = jwt.verify(authorization, process.env.JWT);
+        return {userId};
     }
-});
-
-server.listen().then(({url})=> {
-    console.log(`server ready at ${url}`);
+}});
+await apolloServer.start()
+apolloServer.applyMiddleware({app});
+const server = app.listen(PORT, () => {
+    const wsServer = new WebSocketServer({
+        server,
+        path: '/graphql'
+    });
+    useServer({schema}, wsServer);
+    console.log(`Server running on port ${PORT}`);
 });
