@@ -10,7 +10,7 @@ const UserCard = ({user:{name,id}}) => {
             className='userCard'
             direction='row'
             spacing={2}
-            sx={{'py':'1px'}}
+            sx={{'py':'1px', 'marginTop':'3px'}}
             alignItems='center'
             onClick={()=>navigate(`/${id}`)}
         >

@@ -29,6 +29,7 @@ const SideBar = () => {
             backgroundColor='#f7f7f7'
             maxWidth='350px'
             padding='10px'
+            overflow='auto'
         >
             <Stack
                 direction='row'

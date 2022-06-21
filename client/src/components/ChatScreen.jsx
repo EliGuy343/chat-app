@@ -10,7 +10,6 @@ import {
   Typography,
   Stack
 } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
 import MessageCard from './MessageCard';
 import { useMutation, useQuery, useSubscription } from '@apollo/client';
 import { GET_MESSAGES, GET_USER } from '../graphql/queries';
@@ -34,9 +33,9 @@ const ChatScreen = () => {
       setMessages(data.messagesByUser);
     },[id]);
     
-    const {data:userData, loading:userLoading, error:userError} = useQuery(
+    const {data:userData, loading:userLoading} = useQuery(
       GET_USER,{ variables:{receiverId:+id}});
-      const {data, loading , error} = useQuery(
+      const {data, loading} = useQuery(
         GET_MESSAGES,{variables:{receiverId:+id}, onCompleted(data) {
           setMessages(data.messagesByUser);
         }});
@@ -90,31 +89,27 @@ const ChatScreen = () => {
               variant='outlined'
               background='#f5f5f5'
               fullWidth
-              multiline
-              rows={2}
+              rows={1}
               value={text}
               onKeyDown={(e)=>{
-                if(e.key === 'Enter') {
-                  setText('');
+                if(e.key === 'Enter' && text && text.length > 0) {
                   sendMessage({
                     variables:{
                       receiverId: +id,
                       text
                     }
                   });
+                  setText('');
                 }
               }}
-              onChange={e=>setText(e.target.value)}
-            />
-            <SendIcon fontSize='large' onClick={()=>{
-              setText('');
-              sendMessage({
-                variables:{
-                  receiverId: +id,
-                  text
-                }
-              });
-            }}/>
+              onChange={e=>{
+                console.log(e);
+                debugger
+                if(e.nativeEvent.inputType !== "insertLineBreak") 
+                  setText(e.target.value);
+              }}
+            >
+            </TextField>
           </Stack>
         </Box>
   );
