@@ -103,8 +103,6 @@ const ChatScreen = () => {
                 }
               }}
               onChange={e=>{
-                console.log(e);
-                debugger
                 if(e.nativeEvent.inputType !== "insertLineBreak") 
                   setText(e.target.value);
               }}

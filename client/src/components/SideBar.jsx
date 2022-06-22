@@ -5,18 +5,30 @@ import {
     Box,
     Divider,
     Typography,
-    Stack
+    Stack,
+    TextField
 } from '@mui/material';
 import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_USERS } from '../graphql/queries';
 import { useApolloClient } from '@apollo/client';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const SideBar = () => {
     const client = useApolloClient();
+    const [nameSearch, setNameSearch] = useState('');
+    useEffect(()=>{
+        if(nameSearch)
+            refetch({
+                'nameQuery':nameSearch
+            })
+    },[nameSearch]);
     const {logout} = useContext(UserContext);
-    const {loading, data, error} = useQuery(GET_ALL_USERS);
+    const {loading, data, error, refetch} = useQuery(GET_ALL_USERS, {
+        fetchPolicy:'no-cache'
+    });
     if(loading) {
         return (
             <Typography variant='h6'>
@@ -44,7 +56,20 @@ const SideBar = () => {
                         logout();
                     }}/>
             </Stack>
-            <Divider/>
+            <Divider sx={{bgcolor:'#000000'}}/>
+            <Stack 
+                justifyContent='space-between'
+                alignItems='center'
+                textAlign='center'
+            >
+                <TextField 
+                    rows={1} 
+                    placeholder='Search Users'
+                    sx={{'marginTop':'10px', 'marginBottom':'3px'}}
+                    onChange={e=>setNameSearch(e.target.value)}
+
+                />
+            </Stack>
             {data && data.users &&
                 data.users.map(user=>(
                     <UserCard key={user.id} user={user}/>
