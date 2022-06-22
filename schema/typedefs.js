@@ -28,7 +28,7 @@ const typeDefs = gql`
     }
     type Query{
         user(receiverId:Int!):User
-        users:[User]
+        users(nameQuery:String):[User]
         messagesByUser(receiverId:Int!):[Message]
     }
     type Mutation{

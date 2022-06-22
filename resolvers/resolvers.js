@@ -13,17 +13,31 @@ const MESSAGE_ADDED = 'MESSAGE_ADDED';
 
 const resolvers = {
     Query:{
-        users: async (_,args,{userId})=>{
+        users: async (_,{nameQuery},{userId})=>{
             if(!userId)
                 ForbiddenError('You must be logged in to fetch users');
-                
-            const users = await prisma.user.findMany({
-                where:{
-                    id:{
-                        not:userId
+            let users;
+            if(nameQuery) {
+                users = await prisma.user.findMany({
+                    where:{
+                        id:{
+                            not:userId
+                        },
+                        name:{
+                            contains:nameQuery
+                        }
                     }
-                }
-            });
+                });
+            }
+            else {
+                users = await prisma.user.findMany({
+                    where:{
+                        id:{
+                            not:userId
+                        }
+                    }
+                });
+            } 
             return users;
         },
         messagesByUser: async (_,{receiverId},{userId}) =>{
