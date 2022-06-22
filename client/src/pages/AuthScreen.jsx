@@ -51,7 +51,7 @@ const AuthScreen = () => {
                     userSignin:formData
                 }
             });
-        } 
+        }
         else {
             if(formData.password !== formData.confrimPassword)
                 return setAuthError('Error: Passwords do not much!');

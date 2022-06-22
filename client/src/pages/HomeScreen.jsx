@@ -11,8 +11,8 @@ const AllRoutes = () => {
       <Route path='/' element={<Welcome/>}/>
       <Route path='/:id' element={<ChatScreen/>}/>
     </Routes>
-  )
-};
+  );
+}
 
 const HomeScreen = () => {
   return (
@@ -23,7 +23,7 @@ const HomeScreen = () => {
       <SideBar/>
       <AllRoutes/>
     </Box>
-  )
+  );
 }
 
 export default HomeScreen;

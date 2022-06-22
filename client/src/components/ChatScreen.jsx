@@ -22,7 +22,6 @@ const ChatScreen = () => {
   const [text, setText] = useState();
   const {data:subData} = useSubscription(MESSAGE_SUBSCRIPTION,
     {onSubscriptionData(data) {
-      console.log(data);
       setMessages((prevMessages)=>[...prevMessages,
         data.subscriptionData.data.messageAdded]);
     }}

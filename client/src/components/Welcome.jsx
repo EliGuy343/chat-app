@@ -9,7 +9,7 @@ const Welcome = () => {
         alignItems='center'
         flexGrow={1}
    >
-    <Typography variant='h2'>Welcome to Teams</Typography>
+    <Typography variant='h2'>Welcome to Chat</Typography>
    </Stack>
   );
 }

@@ -29,4 +29,4 @@ const MessageCard = ({text,date,direction}) => {
   );
 }
 
-export default MessageCard
+export default MessageCard;
